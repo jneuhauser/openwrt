@@ -26,6 +26,12 @@ define U-Boot/apalis_imx6
   UBOOT_MAKE_FLAGS:=SPL u-boot.img u-boot-with-spl.imx
 endef
 
+define U-Boot/dh_imx6
+  NAME:=DHCOM i.MX6QDL
+  UBOOT_IMAGE:=SPL u-boot.img u-boot-with-spl.imx
+  UBOOT_MAKE_FLAGS:=SPL u-boot.img u-boot-with-spl.imx
+endef
+
 define U-Boot/mx6cuboxi
    NAME:=SolidRun Cubox-i boards
    UBOOT_IMAGE:=SPL u-boot.img
@@ -69,6 +75,7 @@ endef
 
 UBOOT_TARGETS := \
 	apalis_imx6 \
+	dh_imx6 \
 	mx6cuboxi \
 	mx6sabresd \
 	nitrogen6dl \

@@ -17,6 +17,10 @@ case "$board" in
 apalis*)
 	ubootenv_add_uci_config $(bootdev_from_uuid)boot0 -0x2200 0x2000 0x200 10
 	;;
+imx6*-dhcom-*)
+	ubootenv_add_uci_config /dev/mtd0 0x100000 0x4000 0x4000
+	ubootenv_add_uci_config /dev/mtd0 0x110000 0x4000 0x4000
+	;;
 *gw5*)
 	if [ -c /dev/mtd1 ]; then
 		# board boots from NAND

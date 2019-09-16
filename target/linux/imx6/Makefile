@@ -18,7 +18,7 @@ KERNEL_PATCHVER:=4.19
 
 include $(INCLUDE_DIR)/target.mk
 
-KERNELNAME:=zImage dtbs
+KERNELNAME:=Image zImage dtbs
 
 DEFAULT_PACKAGES += uboot-envtools mkf2fs e2fsprogs blkid
 

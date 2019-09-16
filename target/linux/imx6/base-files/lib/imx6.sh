@@ -40,6 +40,10 @@ imx6_board_detect() {
 	machine=$(cat /proc/device-tree/model)
 
 	case "$machine" in
+	"Freescale i.MX6 Quad DHCOM Premium Developer Kit (2)")
+		name="imx6q-dhcom-pdk2"
+		;;
+
 	"Gateworks Ventana i.MX6 DualLite/Solo GW51XX" |\
 	"Gateworks Ventana i.MX6 Dual/Quad GW51XX")
 		name="gw51xx"

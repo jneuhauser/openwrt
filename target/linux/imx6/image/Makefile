@@ -130,6 +130,12 @@ define Device/Default
   IMAGES :=
 endef
 
+define Device/FitImageGzip
+  KERNEL_SUFFIX := -fit-uImage.itb
+  KERNEL = kernel-bin | gzip | fit gzip $$(DTS_DIR)/$$(DEVICE_DTS).dtb
+  KERNEL_NAME := Image
+endef
+
 define Device/ventana
   DEVICE_VENDOR := Gateworks
   DEVICE_MODEL := Ventana family
@@ -231,5 +237,20 @@ define Device/apalis
   ARTIFACT/recovery.scr := recovery-scr
 endef
 TARGET_DEVICES += apalis
+
+define Device/dhcom-pdk2
+  $(call Device/FitImageGzip)
+  DEVICE_TITLE := DHCOM i.MX6 on Premium Developer Kit (2)
+  DEVICE_DTS := imx6q-dhcom-pdk2
+  DEVICE_PACKAGES := \
+    kmod-can kmod-can-flexcan kmod-can-raw \
+    kmod-drm-imx kmod-drm-imx-hdmi kmod-drm-imx-ldb \
+    kmod-eeprom-at24 kmod-input-touchscreen-tsc2004 \
+    kmod-m25p80 kmod-rtc-rv3029c2 kmod-sound-soc-imx-sgtl5000 \
+    uboot-envtools
+  UBOOT := dh_imx6
+  SUPPORTED_DEVICES := dh,imx6q-dhcom-pdk2
+endef
+TARGET_DEVICES += dhcom-pdk2
 
 $(eval $(call BuildImage))
