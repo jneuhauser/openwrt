@@ -650,6 +650,26 @@ endef
 
 $(eval $(call KernelPackage,rtc-rs5c372a))
 
+
+define KernelPackage/rtc-rv3029c2
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Micro Crystal RV3029/RV3049 (and compatible) RTC support
+  DEFAULT:=m if ALL_KMODS && RTC_SUPPORT
+  DEPENDS:=+kmod-i2c-core +!LINUX_4_9:kmod-regmap-i2c +!LINUX_4_9:kmod-regmap-spi +!LINUX_4_9:kmod-hwmon-core
+  KCONFIG:= \
+	CONFIG_RTC_DRV_RV3029C2 \
+	CONFIG_RTC_CLASS=y
+  FILES:=$(LINUX_DIR)/drivers/rtc/rtc-rv3029c2.ko
+  AUTOLOAD:=$(call AutoProbe,rtc-rv3029c2)
+endef
+
+define KernelPackage/rtc-rv3029c2/description
+ Kernel module for Micro Crystal RV3029/RV3049 and compatible RTC chips connected via I2C or SPI.
+endef
+
+$(eval $(call KernelPackage,rtc-rv3029c2))
+
+
 define KernelPackage/rtc-rx8025
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Epson RX-8025 / RX-8035
