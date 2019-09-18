@@ -688,6 +688,47 @@ endef
 $(eval $(call KernelPackage,rtc-rx8025))
 
 
+define KernelPackage/m25p80
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Support most SPI Flash chips (AT26DF, M25P, W25X, ...)
+  DEPENDS:=+!KERNEL_MTD_SPI_NOR:kmod-mtd-spi-nor
+  KCONFIG:= \
+	CONFIG_MTD_M25P80 \
+	CONFIG_MTD=y \
+	CONFIG_SPI_MASTER=y
+  FILES:=$(LINUX_DIR)/drivers/mtd/devices/m25p80.ko
+  AUTOLOAD:=$(call AutoProbe,m25p80)
+endef
+
+define KernelPackage/m25p80/description
+ This enables access to most modern SPI flash chips, used for
+ program and data storage. Series supported include Atmel AT26DF,
+ Spansion S25SL, SST 25VF, ST M25P, and Winbond W25X. Other chips
+ are supported as well. See the driver source for the current list,
+ or to add other chips.
+endef
+
+$(eval $(call KernelPackage,m25p80))
+
+
+define KernelPackage/mtd-spi-nor
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=MTD SPI-NOR framework
+  DEPENDS:=@!KERNEL_MTD_SPI_NOR
+  KCONFIG:= \
+	CONFIG_MTD_SPI_NOR \
+	CONFIG_MTD=y
+  FILES:=$(LINUX_DIR)/drivers/mtd/spi-nor/spi-nor.ko
+endef
+
+define KernelPackage/mtd-spi-nor/description
+ This is the framework for the SPI NOR which can be used by
+ the SPI device drivers and the SPI-NOR device driver.
+endef
+
+$(eval $(call KernelPackage,mtd-spi-nor))
+
+
 define KernelPackage/mtdtests
   SUBMENU:=$(OTHER_MENU)
   TITLE:=MTD subsystem tests
