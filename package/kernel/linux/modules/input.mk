@@ -192,6 +192,60 @@ endef
 $(eval $(call KernelPackage,input-touchscreen-ads7846))
 
 
+define KernelPackage/input-touchscreen-tsc200x-core
+  SUBMENU:=$(INPUT_MODULES_MENU)
+  TITLE:=Core kernel module for TSC200X based touchscreens
+  DEPENDS:=+kmod-input-core
+  KCONFIG:= \
+	CONFIG_TOUCHSCREEN_TSC200X_CORE \
+	CONFIG_INPUT_TOUCHSCREEN=y
+  FILES:=$(LINUX_DIR)/drivers/input/touchscreen/tsc200x-core.ko
+  AUTOLOAD:=$(call AutoProbe,tsc200x-core)
+endef
+
+define KernelPackage/input-touchscreen-tsc200x-core/description
+  Core kernel module for TSC200X based touchscreens
+endef
+
+$(eval $(call KernelPackage,input-touchscreen-tsc200x-core))
+
+
+define KernelPackage/input-touchscreen-tsc2004
+  SUBMENU:=$(INPUT_MODULES_MENU)
+  TITLE:=Kernel module for TSC2004 based touchscreen
+  DEPENDS:=+kmod-input-core +kmod-input-touchscreen-tsc200x-core +kmod-i2c-core +kmod-regmap-i2c
+  KCONFIG:= \
+	CONFIG_TOUCHSCREEN_TSC2004 \
+	CONFIG_INPUT_TOUCHSCREEN=y
+  FILES:=$(LINUX_DIR)/drivers/input/touchscreen/tsc2004.ko
+  AUTOLOAD:=$(call AutoProbe,tsc2004)
+endef
+
+define KernelPackage/input-touchscreen-tsc2004/description
+  Kernel module for TSC2004 based touchscreen
+endef
+
+$(eval $(call KernelPackage,input-touchscreen-tsc2004))
+
+
+define KernelPackage/input-touchscreen-tsc2005
+  SUBMENU:=$(INPUT_MODULES_MENU)
+  TITLE:=Kernel module for TSC2005 based touchscreen
+  DEPENDS:=+kmod-input-core +kmod-input-touchscreen-tsc200x-core +kmod-spi-bitbang +kmod-regmap-spi
+  KCONFIG:= \
+	CONFIG_TOUCHSCREEN_TSC2005 \
+	CONFIG_INPUT_TOUCHSCREEN=y
+  FILES:=$(LINUX_DIR)/drivers/input/touchscreen/tsc2005.ko
+  AUTOLOAD:=$(call AutoProbe,tsc2005)
+endef
+
+define KernelPackage/input-touchscreen-tsc2005/description
+  Kernel module for TSC2005 based touchscreen
+endef
+
+$(eval $(call KernelPackage,input-touchscreen-tsc2005))
+
+
 define KernelPackage/keyboard-imx
   SUBMENU:=$(INPUT_MODULES_MENU)
   TITLE:=IMX keypad support
