@@ -1,0 +1,60 @@
+openwrt_boot_image=openwrt-imx6-dhcom-pdk2-fit-uImage.itb
+openwrt_initramfs_image=openwrt-imx6-dhcom-pdk2-initramfs-fit-uImage.itb
+
+echo "OpenWrt Boot script for DHCOM i.MX6 on Premium Developer Kit (2)"
+
+if test ${dhcom} == "imx6q-dhcom3" || test ${dhcom} == "imx6q-dhcom4" ; then
+  echo "Detected i.MX6 Quad on DHCOM HW rev 3/4"
+  fit_config="imx6q-dhcom"
+elif test ${dhcom} == "imx6d-dhcom3" || test ${dhcom} == "imx6d-dhcom4" ; then
+  echo "Detected i.MX6 Dual on DHCOM HW rev 3/4"
+  fit_config="imx6q-dhcom"
+else
+  echo "Detected unsupported board... Aborting boot script!"
+  exit 0
+fi
+fit_config="${fit_config}-pdk2"
+
+if test -n "${distro_bootpart}" ; then
+  setenv partition "${distro_bootpart}"
+else
+  setenv partition "${bootpart}"
+fi
+
+if test -e ${devtype} ${devnum}:${partition} u-boot-with-spl.imx ; then
+  echo "Try to update U-Boot in flash with the one of the boot partition."
+  setexpr flashaddr ${loadaddr} - 0x400
+  mw.b ${flashaddr} 0x00 0x400
+  load ${devtype} ${devnum}:${partition} ${loadaddr} u-boot-with-spl.imx
+  setexpr flashsize ${filesize} + 0x400
+  if test -n "${flashaddr}" && test "${flashsize}" -gt 0 ; then
+    sf probe && sf update ${flashaddr} 0x0 ${flashsize}
+  fi
+fi
+
+if test -e ${devtype} ${devnum}:${partition} ${openwrt_initramfs_image} ; then
+  fit_image=${openwrt_initramfs_image}
+elif test -e ${devtype} ${devnum}:${partition} ${openwrt_boot_image} ; then
+  fit_image=${openwrt_boot_image}
+else
+  echo "Found no appropriate boot file... Aborting boot script!"
+  echo "Provide one of the following files:"
+  echo " ${openwrt_initramfs_image}"
+  echo " ${openwrt_boot_image}"
+  exit 0
+fi
+echo "Loading fit image: ${fit_image}"
+load ${devtype} ${devnum}:${partition} ${loadaddr} ${fit_image}
+
+echo "Trying to boot ${fit_config} config!"
+if bootm ${loadaddr}#${fit_config} || true ; then
+  echo "Found no fit config with ${fit_config}..."
+fi
+
+echo "Trying to boot default config!"
+if bootm ${loadaddr} || true ; then
+  echo "Found no default fit config..."
+fi
+
+echo "Something went wrong... Aborting boot script!"
+exit 0
